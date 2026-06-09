@@ -1,14 +1,16 @@
+# .gitignore
+
 # ── DVC cache & local config ───────────────────────────────────────────────
 .dvc/cache/
 .dvc/tmp/
 .dvc/config.local
 
-# ── Raw data (tracked by DVC, not git) ────────────────────────────────────
-data/inputs/
-data/outputs/
-# Keep the .dvc pointer files:
-!data/inputs/.gitkeep
-!data/outputs/.gitkeep
+# ── Raw data folders (actual files ignored, .dvc pointers are tracked) ────
+data/inputs/**
+data/outputs/**
+# Allow .dvc pointer files and .gitkeep markers anywhere under data/
+!data/**/*.dvc
+!data/**/.gitkeep
 
 # ── MLflow local artefacts ─────────────────────────────────────────────────
 mlruns/
@@ -31,12 +33,3 @@ venv/
 # ── OS ─────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-
-# ── data ─────────────────────────────────────────────────────────────────────
-data/
-*.parquet
-*.csv
-*.pkl
-.venv/
-__pycache__/
-
