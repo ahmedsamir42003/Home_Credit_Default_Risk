@@ -1,0 +1,68 @@
+stages:
+
+  prepare:
+    cmd: python main.py --stage prepare --log-level INFO
+    params:
+      - params.yaml:
+          - seed
+          - n_folds
+          - te_smoothing
+          - te_min_samples
+          - corr_threshold
+          - null_imp_n_runs
+    deps:
+      - main.py
+      - src/config.py
+      - src/data_prep.py
+      - src/features.py
+      - src/utils.py
+      - data/inputs/home-credit-default-risk/application_train.csv
+      - data/inputs/home-credit-default-risk/application_test.csv
+      - data/inputs/home-credit-default-risk/bureau.csv
+      - data/inputs/home-credit-default-risk/bureau_balance.csv
+      - data/inputs/home-credit-default-risk/previous_application.csv
+      - data/inputs/home-credit-default-risk/POS_CASH_balance.csv
+      - data/inputs/home-credit-default-risk/credit_card_balance.csv
+      - data/inputs/home-credit-default-risk/installments_payments.csv
+    outs:
+      - data/outputs/prepared/train.parquet
+      - data/outputs/prepared/test.parquet
+      - data/outputs/prepared/cat_train.parquet
+      - data/outputs/prepared/cat_test.parquet
+      - data/outputs/prepared/target.parquet
+      - data/outputs/prepared/cat_y.parquet
+      - data/outputs/prepared/train_ids.parquet
+      - data/outputs/prepared/test_ids.parquet
+      - data/outputs/prepared/meta.json
+
+
+  train:
+    cmd: python main.py --stage train --log-level INFO
+    params:
+      - params.yaml:
+          - seed
+          - n_folds
+          - lgb_a
+          - lgb_b
+          - xgb
+          - catboost
+    deps:
+      - main.py
+      - src/config.py
+      - src/train.py
+      - data/outputs/prepared/train.parquet
+      - data/outputs/prepared/test.parquet
+      - data/outputs/prepared/cat_train.parquet
+      - data/outputs/prepared/cat_test.parquet
+      - data/outputs/prepared/target.parquet
+      - data/outputs/prepared/cat_y.parquet
+      - data/outputs/prepared/train_ids.parquet
+      - data/outputs/prepared/test_ids.parquet
+      - data/outputs/prepared/meta.json
+    outs:
+      - data/outputs/submission.csv
+      - data/outputs/mlruns:
+          cache: true
+    metrics:
+      - data/outputs/metrics.json:
+          cache: false

@@ -1,0 +1,30 @@
+# params.yaml
+# -----------
+# DVC reads this file for experiment comparison (dvc exp run --set-param …).
+# Values here mirror src/config.py; the pipeline always uses config.py as
+# the authoritative source — params.yaml is for dvc exp / dvc metrics diff.
+
+seed: 42
+n_folds: 5
+te_smoothing: 40
+te_min_samples: 80
+corr_threshold: 0.985
+null_imp_n_runs: 5
+
+lgb_a:
+  learning_rate: 0.01
+  num_leaves: 48
+  max_depth: 7
+
+lgb_b:
+  learning_rate: 0.008
+  num_leaves: 34
+  max_depth: 5
+
+xgb:
+  learning_rate: 0.01
+  max_depth: 5
+
+catboost:
+  learning_rate: 0.03
+  depth: 7
