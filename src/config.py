@@ -1,9 +1,12 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ---------------------------------------------------------------------------
 # Paths  (DVC-tracked)
 # ---------------------------------------------------------------------------
-DATA_DIR: str = os.path.join(os.path.expanduser("~"), "data", "inputs", "home-credit-default-risk")
+DATA_DIR: str = os.path.join(os.path.expanduser("~"), "data", "inputs")
 OUTPUT_DIR: str = os.path.join(os.path.expanduser("~"), "data", "outputs")
 
 # ---------------------------------------------------------------------------

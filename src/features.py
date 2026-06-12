@@ -204,14 +204,14 @@ def bureau_and_balance_features(data_dir: str) -> pd.DataFrame:
     # ----------------------------------------- numeric aggregation
     num_cols = [
         c for c in bureau.columns
-        if bureau[c].dtype != "str" and c not in ["SK_ID_BUREAU", "SK_ID_CURR"]
+        if bureau[c].dtype != "object" and c not in ["SK_ID_BUREAU", "SK_ID_CURR"]
     ]
     buro_num = bureau.groupby("SK_ID_CURR")[num_cols].agg(["min", "max", "mean", "sum", "var"])
     buro_num.columns = [f"BURO_{c[0]}_{c[1].upper()}" for c in buro_num.columns]
     buro_feat = buro_num.reset_index()
 
     # ----------------------------------------- categorical (OHE + mean)
-    cat_cols = [c for c in bureau.columns if bureau[c].dtype == "str"]
+    cat_cols = [c for c in bureau.columns if bureau[c].dtype == "object"]
     if cat_cols:
         buro_cat = pd.get_dummies(bureau[["SK_ID_CURR"] + cat_cols], columns=cat_cols, dummy_na=True)
         buro_cat = buro_cat.groupby("SK_ID_CURR").mean().reset_index()
@@ -301,12 +301,12 @@ def previous_application_features(data_dir: str) -> pd.DataFrame:
     prev["DOWN_PAYMENT_P"] = prev["AMT_DOWN_PAYMENT"] / (prev["AMT_CREDIT"] + 1)
     prev["INTEREST_SHARE"] = prev["CNT_PAYMENT"] * prev["AMT_ANNUITY"] - prev["AMT_CREDIT"]
     prev["INTEREST_RATE"] = prev["INTEREST_SHARE"] / (prev["AMT_CREDIT"] + 1)
-    num_cols = [c for c in prev.columns if prev[c].dtype != "str" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
+    num_cols = [c for c in prev.columns if prev[c].dtype != "object" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
     prev_num = prev.groupby("SK_ID_CURR")[num_cols].agg(["min", "max", "mean", "sum", "var"])
     prev_num.columns = [f"PREV_{c[0]}_{c[1].upper()}" for c in prev_num.columns]
     prev_feat = prev_num.reset_index()
 
-    cat_cols = [c for c in prev.columns if prev[c].dtype == "str"]
+    cat_cols = [c for c in prev.columns if prev[c].dtype == "object"]
     if cat_cols:
         prev_cat = pd.get_dummies(prev[["SK_ID_CURR"] + cat_cols], columns=cat_cols, dummy_na=True)
         prev_cat = prev_cat.groupby("SK_ID_CURR").mean().reset_index()
@@ -378,7 +378,7 @@ def pos_cash_features(data_dir: str) -> pd.DataFrame:
     pos["SK_DPD_RATIO"] = pos["SK_DPD"] / (pos["SK_DPD_DEF"] + 1)
     pos["LATE_POS"] = (pos["SK_DPD"] > 0).astype("int8")
 
-    num_cols = [c for c in pos.columns if pos[c].dtype != "str" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
+    num_cols = [c for c in pos.columns if pos[c].dtype != "object" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
     pn = pos.groupby("SK_ID_CURR")[num_cols].agg(["min", "max", "mean", "sum", "var"])
     pn.columns = [f"POS_{c[0]}_{c[1].upper()}" for c in pn.columns]
     pn = pn.reset_index()
@@ -440,7 +440,7 @@ def credit_card_features(data_dir: str) -> pd.DataFrame:
     cc["CC_LATE"] = (cc["SK_DPD"] > 0).astype("int8")
     cc["CC_MIN_PAY_RATIO"] = cc["AMT_INST_MIN_REGULARITY"] / (cc["AMT_PAYMENT_CURRENT"] + 1)
 
-    num_cols = [c for c in cc.columns if cc[c].dtype != "str" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
+    num_cols = [c for c in cc.columns if cc[c].dtype != "object" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
     cn = cc.groupby("SK_ID_CURR")[num_cols].agg(["min", "max", "mean", "sum", "var"])
     cn.columns = [f"CC_{c[0]}_{c[1].upper()}" for c in cn.columns]
     cn = cn.reset_index()
@@ -493,7 +493,7 @@ def installments_features(data_dir: str) -> pd.DataFrame:
     ins["LATE_PAYMENT"] = (ins["DPD"] > 0).astype("int8")
     ins["SIGNIFICANT_UNDERPAY"] = (ins["PAYMENT_DIFF"] > 100).astype("int8")
 
-    num_cols = [c for c in ins.columns if ins[c].dtype != "str" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
+    num_cols = [c for c in ins.columns if ins[c].dtype != "object" and c not in ["SK_ID_CURR", "SK_ID_PREV"]]
     iN = ins.groupby("SK_ID_CURR")[num_cols].agg(["min", "max", "mean", "sum", "var"])
     iN.columns = [f"INS_{c[0]}_{c[1].upper()}" for c in iN.columns]
     iN = iN.reset_index()

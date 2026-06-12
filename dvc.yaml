@@ -1,7 +1,7 @@
 stages:
 
   prepare:
-    cmd: python main.py --stage prepare --log-level INFO
+    cmd: uv run main.py --stage prepare --log-level INFO
     params:
       - params.yaml:
           - seed
@@ -16,14 +16,14 @@ stages:
       - src/data_prep.py
       - src/features.py
       - src/utils.py
-      - data/inputs/home-credit-default-risk/application_train.csv
-      - data/inputs/home-credit-default-risk/application_test.csv
-      - data/inputs/home-credit-default-risk/bureau.csv
-      - data/inputs/home-credit-default-risk/bureau_balance.csv
-      - data/inputs/home-credit-default-risk/previous_application.csv
-      - data/inputs/home-credit-default-risk/POS_CASH_balance.csv
-      - data/inputs/home-credit-default-risk/credit_card_balance.csv
-      - data/inputs/home-credit-default-risk/installments_payments.csv
+      - data/inputs/application_train.csv
+      - data/inputs/application_test.csv
+      - data/inputs/bureau.csv
+      - data/inputs/bureau_balance.csv
+      - data/inputs/previous_application.csv
+      - data/inputs/POS_CASH_balance.csv
+      - data/inputs/credit_card_balance.csv
+      - data/inputs/installments_payments.csv
     outs:
       - data/outputs/prepared/train.parquet
       - data/outputs/prepared/test.parquet
@@ -37,7 +37,7 @@ stages:
 
 
   train:
-    cmd: python main.py --stage train --log-level INFO
+    cmd: uv run main.py --stage train --log-level INFO
     params:
       - params.yaml:
           - seed

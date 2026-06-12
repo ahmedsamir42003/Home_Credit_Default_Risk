@@ -96,7 +96,8 @@ def _sub_model_features(
 
     gkf = GroupKFold(n_splits=5)
     for tr_idx, va_idx in gkf.split(X_tr, y_tr, groups=groups):
-        m = lgb.LGBMClassifier(**params, random_state=seed)
+        random_state=seed
+        m = lgb.LGBMClassifier(**params)
         m.fit(
             X_tr.iloc[tr_idx], y_tr.iloc[tr_idx],
             eval_set=[(X_tr.iloc[va_idx], y_tr.iloc[va_idx])],
@@ -289,7 +290,7 @@ def prepare_data(cfg: object = config) -> PreparedData:
 
     # --------------------------------------- frequency / groupby / TE feats
     logger.info("Adding frequency / groupby / target-encoding features …")
-    cat_cols_for_freq = [c for c in train.columns if train[c].dtype == "str"]
+    cat_cols_for_freq = [c for c in train.columns if train[c].dtype == "object"]
     train, test = add_frequency_features(train, test, cat_cols_for_freq)
 
     for c1, c2 in cfg.COMBO_CAT_PAIRS:
@@ -325,7 +326,7 @@ def prepare_data(cfg: object = config) -> PreparedData:
     # ---------------------------------------- prepare CatBoost version first
     cat_train = train.drop(columns=["SK_ID_CURR"]).copy()
     cat_test = test.drop(columns=["SK_ID_CURR"]).copy()
-    cat_feature_names = [c for c in cat_train.columns if c != "TARGET" and cat_train[c].dtype == "str"]
+    cat_feature_names = [c for c in cat_train.columns if c != "TARGET" and cat_train[c].dtype == "object"]
 
     for col in cat_feature_names:
         cat_train[col] = cat_train[col].fillna("__nan__").astype(str)
@@ -353,7 +354,7 @@ def prepare_data(cfg: object = config) -> PreparedData:
     train = train.drop(columns=["TARGET", "SK_ID_CURR"])
     test = test.drop(columns=["SK_ID_CURR"])
 
-    obj_cols = [c for c in train.columns if train[c].dtype == "str"]
+    obj_cols = [c for c in train.columns if train[c].dtype == "object"]
     for col in obj_cols:
         le = LabelEncoder()
         all_vals = pd.concat([train[col], test[col]], axis=0).astype(str).fillna("nan")

@@ -24,3 +24,4 @@ sklearn-preprocessing==0.1.0
 threadpoolctl==3.6.0
 xgboost==3.2.0
 dvc==3.67.1
+mlflow==3.13.0

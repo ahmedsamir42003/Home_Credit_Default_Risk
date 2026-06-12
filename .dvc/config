@@ -1,0 +1,4 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/ahmedsamir42003/Home_Credit_Default_Risk.dvc
