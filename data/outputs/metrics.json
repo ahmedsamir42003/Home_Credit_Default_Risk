@@ -1,0 +1,8 @@
+{
+  "oof_auc_lgb_a": 0.800516,
+  "oof_auc_lgb_b": 0.800203,
+  "oof_auc_lgb_c": 0.801363,
+  "oof_auc_xgb": 0.800746,
+  "oof_auc_catboost": 0.799963,
+  "oof_auc_ensemble": 0.802367
+}
